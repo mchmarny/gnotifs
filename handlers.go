@@ -8,6 +8,10 @@ import (
 	"net/http"
 )
 
+var (
+	knownPublisherToken = mustGetEnv("KGCS_KNOWN_PUBLISHER_TOKEN", "")
+)
+
 /*
 
 POST
@@ -34,6 +38,8 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 // https://cloud.google.com/storage/docs/gsutil/commands/notification
 func notificationHandler(w http.ResponseWriter, r *http.Request) {
 
+	w.Header().Set("Content-Type", "application/json")
+
 	// check method
 	if r.Method != http.MethodPost {
 		log.Printf("wring method: %s", r.Method)
@@ -43,18 +49,26 @@ func notificationHandler(w http.ResponseWriter, r *http.Request) {
 
 	// required
 	t := getHeader("X-Goog-Channel-Token", r)
+	s := getHeader("X-Goog-Resource-State", r)
 
 	// print only others
 	getHeader("X-Goog-Channel-Id", r)
 	getHeader("X-Goog-Resource-Id", r)
-	getHeader("X-Goog-Resource-State", r)
 	getHeader("X-Goog-Resource-Uri", r)
 
 	// check for presense/validity of publisher token
 	if t != knownPublisherToken {
 		log.Printf("Invalid token: %s", t)
+		// BadRequest == no retries from GCS
 		http.Error(w, fmt.Sprintf("Invalid request (token: %s)", t),
 			http.StatusBadRequest)
+		return
+	}
+
+	// if status is sync then there is no body
+	if s == "sync" {
+		log.Println("Sync message")
+		w.WriteHeader(http.StatusNoContent)
 		return
 	}
 
@@ -63,17 +77,20 @@ func notificationHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	if err != nil {
 		log.Printf("Error capturing payload: %v", err)
+
 		http.Error(w, fmt.Sprintf("Error capturing payload: %s", err), http.StatusBadRequest)
 		return
 	}
 
-	log.Printf("Body: %s", string(pb))
+	// print JSON for debugging
+	log.Println(string(pb))
 
 	// parse payload
 	n := Notification{}
 	if err := json.Unmarshal(pb, &n); err != nil {
 		log.Printf("Error decoding notification: %v", err)
-		http.Error(w, fmt.Sprintf("Error decoding notification: %s", err), http.StatusBadRequest)
+		// could be our parsing issue here so BadGateway, GCS will retry
+		http.Error(w, fmt.Sprintf("Error decoding notification: %s", err), http.StatusBadGateway)
 		return
 	}
 
@@ -83,7 +100,6 @@ func notificationHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Payload: %s", n)
 
 	// response with accepted status
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusAccepted)
 
 }

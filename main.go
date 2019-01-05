@@ -6,10 +6,6 @@ import (
 	"net/http"
 )
 
-var (
-	knownPublisherToken = ""
-)
-
 func main() {
 
 	log.Print("Starting server...")
@@ -22,7 +18,6 @@ func main() {
 	})
 
 	// variables
-	knownPublisherToken = mustGetEnv("KNOWN_PUBLISHER_TOKEN", "")
 	port := mustGetEnv("PORT", "8080")
 
 	log.Printf("Server started on port %s \n", port)

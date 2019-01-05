@@ -17,7 +17,7 @@ gcloud auth activate-service-account \
 Make secure token
 
 ```shell
-export KNOWN_PUBLISHER_TOKEN="$(openssl rand -base64 8 |md5 |head -c16;echo)"
+export KGCS_KNOWN_PUBLISHER_TOKEN="$(openssl rand -base64 8 |md5 |head -c16;echo)"
 ```
 
 Create a bucket
@@ -31,12 +31,32 @@ Create notification
 
 ```shell
 gsutil notification watchbucket \
-    -t $KNOWN_PUBLISHER_TOKEN \
-    -i kgcs \
+    -t $KGCS_KNOWN_PUBLISHER_TOKEN \
+    -i kgcs-v1 \
     https://kgcs.default.knative.tech/gcs gs://$GCS_BUCKET_NAME
 ```
 
+List notifications
 
+```shell
+gsutil notification list -o gs://$GCS_BUCKET_NAME
+```
+
+The response will look something like this
+
+```shell
+...
+    Notification channel 1:
+		Channel identifier: kgcs-v1
+		Resource identifier: 35OA-OShWsXoAIxNN8YppO_1cft
+        ...
+```
+
+Stop notifications
+
+```shell
+gsutil notification stopchannel kgcs-v1 ["Resource identifier from list"]
+```
 
 
 ## Deploy

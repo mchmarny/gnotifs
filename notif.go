@@ -15,7 +15,7 @@ Sample Payload
 	"contentType": "application/octet-stream",
 	"timeCreated": "2019-01-05T20:36:12.085Z",
 	"updated": "2019-01-05T20:36:12.085Z",
-	def"timeStorageClassUpdated": "2019-01-05T20:36:12.085Z",
+	"timeStorageClassUpdated": "2019-01-05T20:36:12.085Z",
 	"size": "1787",
 	"md5Hash": "Sh8fXcL5oD8o6va5zE5BWg==",
 	"mediaLink": "...download/storage/v1/b/BUCKET/o/main.go?generation=154&alt=media",
