@@ -32,7 +32,7 @@ Create notification
 ```shell
 gsutil notification watchbucket \
     -t $KGCS_KNOWN_PUBLISHER_TOKEN \
-    -i kgcs-v1 \
+    -i kgcs \
     https://kgcs.default.knative.tech/gcs gs://$GCS_BUCKET_NAME
 ```
 
@@ -47,7 +47,7 @@ The response will look something like this
 ```shell
 ...
     Notification channel 1:
-		Channel identifier: kgcs-v1
+		Channel identifier: kgcs
 		Resource identifier: 35OA-OShWsXoAIxNN8YppO_1cft
         ...
 ```

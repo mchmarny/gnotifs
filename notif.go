@@ -25,15 +25,19 @@ Sample Payload
 
 */
 
-// Notification represents the GCS pushed payload
+// ObjectNotification represents the GCS pushed payload
 // Capturing only the bits that we need here
-type Notification struct {
-	Kind        string `json:"kind"`
-	ID          string `json:"id"`
-	SelfLink    string `json:"selfLink"`
-	ObjectName  string `json:"name"`
-	BucketName  string `json:"bucket"`
-	ContentType string `json:"contentType"`
-	Size        string `json:"size"`
-	MD5Hash     string `json:"md5Hash"`
+type ObjectNotification struct {
+
+	// notification
+	Kind       string `json:"kind"`
+	ID         string `json:"id"`
+	SelfLink   string `json:"selfLink"`
+	BucketName string `json:"bucket"`
+
+	// object
+	ObjectName        string `json:"name"`
+	ObjectContentType string `json:"contentType"`
+	ObjectSize        string `json:"size"`
+	ObjectMD5Hash     string `json:"md5Hash"`
 }

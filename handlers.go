@@ -83,10 +83,10 @@ func notificationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// print JSON for debugging
-	log.Println(string(pb))
+	// log.Println(string(pb))
 
 	// parse payload
-	n := Notification{}
+	n := ObjectNotification{}
 	if err := json.Unmarshal(pb, &n); err != nil {
 		log.Printf("Error decoding notification: %v", err)
 		// could be our parsing issue here so BadGateway, GCS will retry
@@ -94,10 +94,8 @@ func notificationHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: Check the MD5 of the payload
-
 	// TODO: do something usefull with the pushed message here
-	log.Printf("Payload: %s", n)
+	log.Printf("Payload: %v", n)
 
 	// response with accepted status
 	w.WriteHeader(http.StatusAccepted)

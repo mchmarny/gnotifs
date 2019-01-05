@@ -1,3 +1,4 @@
+SERVICE_ENDPOINT=https://kgcs.default.knative.tech/gcs
 
 all: test
 
@@ -9,6 +10,12 @@ run:
 
 deps:
 	go mod tidy
+
+notif:
+	gsutil notification watchbucket \
+		-t $(KGCS_KNOWN_PUBLISHER_TOKEN) \
+		-i kgcs \
+		$(SERVICE_ENDPOINT) gs://$(GCS_BUCKET_NAME)
 
 image:
 	gcloud builds submit \
@@ -24,3 +31,7 @@ delete-secret:
 
 deploy:
 	kubectl apply -f service.yaml
+
+cleanup:
+	kubectl delete -f service.yaml
+	kubectl delete secret kgcs

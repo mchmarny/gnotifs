@@ -10,22 +10,23 @@ import (
 const (
 	testNotificationContent = `{
 		"kind": "storage#object",
-		"id": "knative-gcs-sample/main.go/1546720572085362",
-		"selfLink": ".../storage/v1/b/BUCKET/o/main.go",
-		"name": "main.go",
+		"id": "knative-gcs-sample/test.txt/1546728971575475",
+		"selfLink": "https://www.googleapis.com/storage/v1/b/knative-gcs-sample/o/test.txt",
+		"name": "test.txt",
 		"bucket": "knative-gcs-sample",
-		"generation": "1546720572085362",
+		"generation": "1546728971575475",
 		"metageneration": "1",
-		"contentType": "application/octet-stream",
-		"timeCreated": "2019-01-05T20:36:12.085Z",
-		"updated": "2019-01-05T20:36:12.085Z",
-		"timeStorageClassUpdated": "2019-01-05T20:36:12.085Z",
-		"size": "1787",
-		"md5Hash": "Sh8fXcL5oD8o6va5zE5BWg==",
-		"mediaLink": "...download/storage/v1/b/BUCKET/o/main.go?generation=154&alt=media",
-		"crc32c": "KyB3Ww==",
-		"etag": "CPKokJK/198CEAE="
-	}`
+		"contentType": "text/plain",
+		"timeCreated": "2019-01-05T22:56:11.575Z",
+		"updated": "2019-01-05T22:56:11.575Z",
+		"storageClass": "MULTI_REGIONAL",
+		"timeStorageClassUpdated": "2019-01-05T22:56:11.575Z",
+		"size": "714",
+		"md5Hash": "7zmNlW0o3P9yZxz/3NLClw==",
+		"mediaLink": "https://www.googleapis.com/download/storage/v1/b/knative-gcs-sample/o/test.txt?generation=1546728971575475&alt=media",
+		"crc32c": "Go70Vg==",
+		"etag": "CLPBqLfe198CEAE="
+ 	}`
 )
 
 func TestNotificationHandlerWithValidToken(t *testing.T) {
