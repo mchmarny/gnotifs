@@ -34,8 +34,6 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 // https://cloud.google.com/storage/docs/gsutil/commands/notification
 func notificationHandler(w http.ResponseWriter, r *http.Request) {
 
-	w.Header().Set("Content-Type", "application/json")
-
 	// check method
 	if r.Method != http.MethodPost {
 		log.Printf("wring method: %s", r.Method)
@@ -44,35 +42,36 @@ func notificationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// required
-	chToken := getHeader("X-Goog-Channel-Token", r)
+	t := getHeader("X-Goog-Channel-Token", r)
 
-	// other
+	// print only others
 	getHeader("X-Goog-Channel-Id", r)
 	getHeader("X-Goog-Resource-Id", r)
 	getHeader("X-Goog-Resource-State", r)
 	getHeader("X-Goog-Resource-Uri", r)
 
 	// check for presense/validity of publisher token
-	if chToken != knownPublisherToken {
-		log.Printf("Invalid token: %s", chToken)
-		http.Error(w, fmt.Sprintf("Invalid request (token: %s)", chToken),
+	if t != knownPublisherToken {
+		log.Printf("Invalid token: %s", t)
+		http.Error(w, fmt.Sprintf("Invalid request (token: %s)", t),
 			http.StatusBadRequest)
 		return
 	}
 
 	// get payload
 	pb, err := ioutil.ReadAll(r.Body)
+	defer r.Body.Close()
 	if err != nil {
 		log.Printf("Error capturing payload: %v", err)
 		http.Error(w, fmt.Sprintf("Error capturing payload: %s", err), http.StatusBadRequest)
 		return
 	}
 
-	log.Printf("Body: %s", pb)
+	log.Printf("Body: %s", string(pb))
 
 	// parse payload
-	notif := &Notification{}
-	if err := json.Unmarshal(pb, notif); err != nil {
+	n := Notification{}
+	if err := json.Unmarshal(pb, &n); err != nil {
 		log.Printf("Error decoding notification: %v", err)
 		http.Error(w, fmt.Sprintf("Error decoding notification: %s", err), http.StatusBadRequest)
 		return
@@ -81,9 +80,10 @@ func notificationHandler(w http.ResponseWriter, r *http.Request) {
 	// TODO: Check the MD5 of the payload
 
 	// TODO: do something usefull with the pushed message here
-	log.Printf("Payload: %s", notif)
+	log.Printf("Payload: %s", n)
 
-	// response with the parsed payload data
+	// response with accepted status
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusAccepted)
 
 }
