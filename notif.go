@@ -1,48 +1,39 @@
 package main
 
-import (
-	"time"
-)
-
 /*
 
 Sample Payload
 
 {
- "kind": "storage#object",
- "id": "BucketName/ObjectName",
- "selfLink": "https://www.googleapis.com/storage/v1/b/BucketName/o/ObjectName",
- "name": "ObjectName",
- "bucket": "BucketName",
- "generation": "1367014943964000",
- "metageneration": "1",
- "contentType": "application/octet-stream",
- "updated": "2013-04-26T22:22:23.832Z",
- "size": "10",
- "md5Hash": "xHZY0QLVuYng2gnOQD90Yw==",
- "mediaLink": "https://www.googleapis.com/storage/v1/b/BucketName/o/ObjectName?generation=1367014943964000&alt=media",
- "owner": { "entity": "user-jane@gmail.com" },
- "crc32c": "C7+82w==",
- "etag": "COD2jMGv6bYCEAE="
+	"kind": "storage#object",
+	"id": "knative-gcs-sample/main.go/1546720572085362",
+	"selfLink": ".../storage/v1/b/BUCKET/o/main.go",
+	"name": "main.go",
+	"bucket": "knative-gcs-sample",
+	"generation": "1546720572085362",
+	"metageneration": "1",
+	"contentType": "application/octet-stream",
+	"timeCreated": "2019-01-05T20:36:12.085Z",
+	"updated": "2019-01-05T20:36:12.085Z",
+	def"timeStorageClassUpdated": "2019-01-05T20:36:12.085Z",
+	"size": "1787",
+	"md5Hash": "Sh8fXcL5oD8o6va5zE5BWg==",
+	"mediaLink": "...download/storage/v1/b/BUCKET/o/main.go?generation=154&alt=media",
+	"crc32c": "KyB3Ww==",
+	"etag": "CPKokJK/198CEAE="
 }
 
 */
 
 // Notification represents the GCS pushed payload
+// Capturing only the bits that we need here
 type Notification struct {
-	ID          string             `json:"id"`
-	Kind        string             `json:"kind"`
-	SelfLink    string             `json:"selfLink"`
-	ObjectName  string             `json:"name"`
-	BucketName  string             `json:"bucket"`
-	ContentType string             `json:"contentType"`
-	Updated     time.Time          `json:"updated"`
-	Size        string             `json:"size"`
-	MD5Hash     string             `json:"md5Hash"`
-	Owner       *NotificationOwner `json:"owner"`
-}
-
-// NotificationOwner represents the owner object of Notification
-type NotificationOwner struct {
-	Entity string `json:"entity"`
+	Kind        string `json:"kind"`
+	ID          string `json:"id"`
+	SelfLink    string `json:"selfLink"`
+	ObjectName  string `json:"name"`
+	BucketName  string `json:"bucket"`
+	ContentType string `json:"contentType"`
+	Size        string `json:"size"`
+	MD5Hash     string `json:"md5Hash"`
 }

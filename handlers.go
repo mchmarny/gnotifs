@@ -19,15 +19,20 @@ X-Goog-Resource-State: ResourceState
 X-Goog-Resource-Uri: https://www.googleapis.com/storage/v1/b/BucketName/o?alt=json
 */
 
-func getHeader(key string, r *http.Request) string {
-	v := r.Header.Get(key)
-	log.Printf("Header[%s] %s", key, v)
-	return v
+func defaultHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	msg := struct {
+		Handlers []string `json:"handlers"`
+	}{
+		[]string{"POST: /gcs"},
+	}
+	json.NewEncoder(w).Encode(msg)
 }
 
-// gcsObjectHandler handles GCS submissions
+// notificationHandler handles GCS submissions
 // https://cloud.google.com/storage/docs/gsutil/commands/notification
-func gcsObjectHandler(w http.ResponseWriter, r *http.Request) {
+func notificationHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -67,7 +72,7 @@ func gcsObjectHandler(w http.ResponseWriter, r *http.Request) {
 
 	// parse payload
 	notif := &Notification{}
-	if err := json.NewDecoder(r.Body).Decode(notif); err != nil {
+	if err := json.Unmarshal(pb, notif); err != nil {
 		log.Printf("Error decoding notification: %v", err)
 		http.Error(w, fmt.Sprintf("Error decoding notification: %s", err), http.StatusBadRequest)
 		return
