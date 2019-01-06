@@ -44,9 +44,9 @@ To deploy this service to Knative we need to:
 From the root of this project run
 
 ```shell
-	gcloud builds submit \
-		--project=$(PROJECT_ID) \
-		--tag gcr.io/$(PROJECT_ID)/kgcs:latest .
+gcloud builds submit \
+    --project=$(PROJECT_ID) \
+    --tag gcr.io/$(PROJECT_ID)/kgcs:latest .
 ```
 
 The build service is pretty verbose in output, eventually though you should see something like this
@@ -76,18 +76,16 @@ secret "kgcs" created
 Before we can deploy that service to Knative you will need to update the `service.yaml` file to the image URL you captured from the `Build image` step.
 
 ```yaml
-    spec:
-        container:
-            image: gcr.io/PROJECT_ID/kgcs:latest
+spec:
+    container:
+        image: gcr.io/PROJECT_ID/kgcs:latest
 ```
 
 To test your deployment you should be able to invoke the root of the `kgcs` and see
 
 ```json
 {
-    "handlers": [
-        "POST: /gcs"
-    ]
+    "handlers": [ "POST: /gcs" ]
 }
 ```
 
@@ -151,10 +149,10 @@ The response will look something like this
 
 ```shell
 ...
-    Notification channel 1:
-		Channel identifier: kgcs
-		Resource identifier: 35OA-OShWsXoAIxNN8YppO_1cft
-        ...
+Notification channel 1:
+    Channel identifier: kgcs
+    Resource identifier: 35OA-OShWsXoAIxNN8YppO_1cft
+    ...
 ```
 
 #### Stop notifications
