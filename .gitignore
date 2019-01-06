@@ -16,6 +16,7 @@
 
 # Secrets
 credentials.json
+token.json
 
 # binaries
 bin
