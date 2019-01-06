@@ -16,3 +16,6 @@
 
 # Secrets
 credentials.json
+
+# binaries
+bin

@@ -35,3 +35,12 @@ deploy:
 cleanup:
 	kubectl delete -f service.yaml
 	kubectl delete secret kgcs
+
+drive-cli:
+	export GO111MODULE=on
+	go mod tidy
+	cd cmd/client/
+	go build -o bin/drive-cli
+
+run-drive-cli:
+	./bin/drive-cli
