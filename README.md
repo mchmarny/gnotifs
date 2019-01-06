@@ -6,14 +6,14 @@ GCP exposes many types of events as notifications. You can easy wire these notif
 
 ## Knative Service
 
-The instructions on building and deploying `gnotifs` service on Knative are located [here](cmd/service).
+The instructions on building and deploying `gnotifs` service on Knative are located [here](cmd/service/README.md).
 
 ## GCP Notifications
 
 Once the GCP notification processing service `gnotifs` is configured on Knative, you will have to set up event individual event sources (triggers). The currently supported GCP notification sources are:
 
-* [Google Cloud Storage (GCS)](pkg/gcs)
-* [Google Drive (Drive)](pkg/drive)
+* [Google Cloud Storage (GCS)](pkg/gcs/README.md)
+* [Google Drive (Drive)](pkg/drive/README.md)
 
 ## Disclaimer
 
