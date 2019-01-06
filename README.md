@@ -4,6 +4,8 @@ GCS notifications processing using Knative service demo
 
 GCP exposes object changed notification. On GCP you can easy wire it to PubSub of even your own code on GCF. If you want to wire these notification to external endpoint like service deployed on Knative there are few additional steps. This demo will walk through the entire process.
 
+> Note, this project will be refactored to support other notification types like Google Drive
+
 ## Setup
 
 To configure this demo will will need to configure two things:

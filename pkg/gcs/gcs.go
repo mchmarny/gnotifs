@@ -1,4 +1,4 @@
-package main
+package gcs
 
 import (
 	"encoding/json"
@@ -6,10 +6,12 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/mchmarny/kgcs/pkg/utils"
 )
 
 var (
-	knownPublisherToken = mustGetEnv("KGCS_KNOWN_PUBLISHER_TOKEN", "")
+	knownPublisherToken = utils.MustGetEnv("KGCS_KNOWN_PUBLISHER_TOKEN", "")
 )
 
 /*
@@ -23,20 +25,9 @@ X-Goog-Resource-State: ResourceState
 X-Goog-Resource-Uri: https://www.googleapis.com/storage/v1/b/BucketName/o?alt=json
 */
 
-func defaultHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	msg := struct {
-		Handlers []string `json:"handlers"`
-	}{
-		[]string{"POST: /gcs"},
-	}
-	json.NewEncoder(w).Encode(msg)
-}
-
-// notificationHandler handles GCS submissions
+// NotificationHandler handles GCS submissions
 // https://cloud.google.com/storage/docs/gsutil/commands/notification
-func notificationHandler(w http.ResponseWriter, r *http.Request) {
+func NotificationHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -48,13 +39,13 @@ func notificationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// required
-	t := getHeader("X-Goog-Channel-Token", r)
-	s := getHeader("X-Goog-Resource-State", r)
+	t := utils.GetHeader("X-Goog-Channel-Token", r)
+	s := utils.GetHeader("X-Goog-Resource-State", r)
 
 	// print only others
-	getHeader("X-Goog-Channel-Id", r)
-	getHeader("X-Goog-Resource-Id", r)
-	getHeader("X-Goog-Resource-Uri", r)
+	utils.GetHeader("X-Goog-Channel-Id", r)
+	utils.GetHeader("X-Goog-Resource-Id", r)
+	utils.GetHeader("X-Goog-Resource-Uri", r)
 
 	// check for presense/validity of publisher token
 	if t != knownPublisherToken {

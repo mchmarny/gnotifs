@@ -1,10 +1,12 @@
-package main
+package gcs
 
 import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/mchmarny/kgcs/pkg/utils"
 )
 
 const (
@@ -31,7 +33,7 @@ const (
 
 func TestNotificationHandlerWithValidToken(t *testing.T) {
 
-	testToken := mustGetEnv("KGCS_KNOWN_PUBLISHER_TOKEN", "")
+	testToken := utils.MustGetEnv("KGCS_KNOWN_PUBLISHER_TOKEN", "")
 
 	req, _ := http.NewRequest("POST", "/gcs", strings.NewReader(testNotificationContent))
 
@@ -42,7 +44,7 @@ func TestNotificationHandlerWithValidToken(t *testing.T) {
 	req.Header.Add("X-Goog-Resource-Uri", "test")
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(notificationHandler)
+	handler := http.HandlerFunc(NotificationHandler)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusAccepted {
@@ -64,7 +66,7 @@ func TestNotificationHandlerWithInvalidToken(t *testing.T) {
 	req.Header.Add("X-Goog-Resource-Uri", "test")
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(notificationHandler)
+	handler := http.HandlerFunc(NotificationHandler)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusBadRequest {
