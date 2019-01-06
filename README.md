@@ -93,7 +93,9 @@ That means the Knative service found the necessary secret and it ready to proces
 
 ### GCS object change notification
 
-There is one aspect of configuring GCS notifications that can't be done from through API, it is the act of adding the domain configured on your Knative cluster to the allow domain list in GCP project. The complete list of steps is outlined [here](https://cloud.google.com/storage/docs/object-change-notification#_Authorize_Endpoint) but it boils down to following steps.
+There is one aspect of configuring GCS notifications that can't be done from through API, it is the act of adding the domain configured on Knative cluster to the allow domain list in GCP project. The complete list of steps is outlined [here](https://cloud.google.com/storage/docs/object-change-notification#_Authorize_Endpoint) but it boils down to following steps.
+
+> Note, if your domain is NOT managed by Google you will also have to [verify the domain ownership](https://cloud.google.com/endpoints/docs/openapi/verify-domain-name)
 
 #### Endpoint Authorization
 
@@ -162,6 +164,17 @@ To stop notifications run this command
 ```shell
 gsutil notification stopchannel kgcs ["Resource identifier from the list command"]
 ```
+
+### Demo
+
+The `kgcs` app doesn't do much with the submitted GCS notifications other than log them. To demo this app you can query the Kubernetes logs.
+
+```shell
+kubectl -l 'serving.knative.dev/service=kgcs' logs -c user-container
+```
+
+Then in the browser you can either upload or delete a file in the `$KGCS_BUCKET_NAME` bucket and see the console output the notification data.
+
 
 ## Disclaimer
 

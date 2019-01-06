@@ -3,6 +3,8 @@ kind: Service
 metadata:
   name: kgcs
   namespace: default
+  labels:
+    app: kgcs
 spec:
   runLatest:
     configuration:
