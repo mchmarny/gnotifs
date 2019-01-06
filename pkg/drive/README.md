@@ -30,7 +30,6 @@ Once there:
  - Click `Create`
 * Click `Download JSON` icon on the far right for the `gnotifs` line item
 
-
 ## Get OAuth Token
 
 From the downloaded credentials JSON copy `client_id` and `client_secret`. To make things easier, export these as environment variables like below.
