@@ -6,7 +6,7 @@ To configure `gnotifs` on Knative you will need to:
 * Create secret
 * Deploy service
 
-> Note, GCS notifications can be only sent to HTTPS endpoints. If your Knative cluster has not been configured with TLS yet, follow the instructions [here](https://github.com/knative/docs/blob/master/serving/using-an-ssl-cert.md) first.
+> Note, GCP notifications can be only sent to HTTPS endpoints. If your Knative cluster has not been configured with TLS yet, follow the instructions [here](https://github.com/knative/docs/blob/master/serving/using-an-ssl-cert.md) first.
 
 To make things easier, define the following environment variables
 
@@ -79,7 +79,7 @@ To test your deployment you should be able to invoke the root of the `gnotif` an
 
 That means the Knative service found the necessary secret and it ready to process notifications from GCS
 
-Go ahead and configure at least one of the notification sources listed [here](/)
+Go ahead and configure at least one of the notification sources listed [here](../../)
 
 ### Demo
 
