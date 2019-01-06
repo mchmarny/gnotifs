@@ -22,12 +22,11 @@ open "https://console.developers.google.com/apis/credentials?project=${PROJECT_I
 Once there:
 
 * Click `Create Credentails`
- - Select `Create OAuth client ID`
- - Select `Other` for `Application type`
- - Enter `gnotifs` as `Name`
- - Click `Create`
+   * Select `Create OAuth client ID`
+   * Select `Other` for `Application type`
+   * Enter `gnotifs` as `Name`
+   * Click `Create`
 * Click `Download JSON` icon on the far right for the `gnotifs` line item
-
 
 ## Get OAuth Token
 
