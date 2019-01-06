@@ -15,6 +15,21 @@ Once the GCP notification processing service `gnotifs` is configured on Knative,
 * [Google Cloud Storage (GCS)](pkg/gcs/README.md)
 * [Google Drive (Drive)](pkg/drive/README.md)
 
+### Demo
+
+The `gnotif` service doesn't do much with the submitted notifications besids output them to log. To demo the incoming notifications you can print these notification logs like this
+
+```shell
+kubectl -l 'serving.knative.dev/service=gnotif' logs -c user-container
+```
+
+Alternativly, you can stream the logs using [kail](https://github.com/boz/kail). 
+
+```shell
+# Get the pod name from 'kubectl get pods'
+kail -p POD_NAME -c user-container 
+```
+
 ## Disclaimer
 
 This is my personal project and it does not represent my employer. I take no responsibility for issues caused by this code. I do my best to ensure that everything works, but if something goes wrong, my apologies is all you will get.
