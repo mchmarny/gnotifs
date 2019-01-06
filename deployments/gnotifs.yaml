@@ -1,7 +1,7 @@
 apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
-  name: gnotif
+  name: gnotifs
   namespace: default
 spec:
   runLatest:
@@ -9,7 +9,7 @@ spec:
       revisionTemplate:
         spec:
           container:
-            image: gcr.io/s9-demo/gnotif:latest
+            image: gcr.io/s9-demo/gnotifs:latest
             imagePullPolicy: Always
             env:
             - name: RELEASE
@@ -17,10 +17,10 @@ spec:
             - name: DRIVE_KNOWN_PUBLISHER_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: gnotif
+                  name: gnotifs
                   key: DRIVE_KNOWN_PUBLISHER_TOKEN
             - name: GCS_KNOWN_PUBLISHER_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: gnotif
+                  name: gnotifs
                   key: GCS_KNOWN_PUBLISHER_TOKEN

@@ -14,7 +14,7 @@ The instructions on building and deploying the `gnotifs` service onto Knative ar
 Once the notification target service is configured on Knative, you will have to configure the event sources (triggers) individually. The currently supported notifications are:
 
 * [Google Cloud Storage (GCS)](pkg/gcs)
-* Google Drive (Drive)
+* [Google Drive (Drive)](pkg/drive)
 
 
 ## Disclaimer

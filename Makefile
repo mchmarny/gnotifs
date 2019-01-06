@@ -1,4 +1,5 @@
-SERVICE_ENDPOINT=https://kgcs.default.knative.tech/gcs
+GCS_SERVICE_ENDPOINT=https://gnotifs.default.knative.tech/gcs
+DRIVE_SERVICE_ENDPOINT=https://gnotifs.default.knative.tech/drive
 
 # DEV
 
@@ -16,21 +17,21 @@ deps:
 image:
 	gcloud builds submit \
 		--project=$(PROJECT_ID) \
-		--tag gcr.io/$(PROJECT_ID)/gnotif:latest .
+		--tag gcr.io/$(PROJECT_ID)/gnotifs:latest .
 
 secret:
-	kubectl create secret generic gnotif \
+	kubectl create secret generic gnotifs \
 		--from-literal=DRIVE_KNOWN_PUBLISHER_TOKEN=$(DRIVE_KNOWN_PUBLISHER_TOKEN) \
 		--from-literal=GCS_KNOWN_PUBLISHER_TOKEN=$(GCS_KNOWN_PUBLISHER_TOKEN)
 
-delete-secret:
-	kubectl delete secret gnotif
+secret-delete:
+	kubectl delete secret gnotifs
 
 deploy:
-	kubectl apply -f deployments/gnotif.yaml
+	kubectl apply -f deployments/gnotifs.yaml
 
 cleanup:
-	kubectl delete -f deployments/gnotif.yaml
+	kubectl delete -f deployments/gnotifs.yaml
 	kubectl delete secret gnotif
 
 # GCS
@@ -38,17 +39,8 @@ cleanup:
 gcs-notif:
 	gsutil notification watchbucket \
 		-t $(KNOWN_PUBLISHER_TOKEN) \
-		-i gnotif \
-		$(SERVICE_ENDPOINT) gs://$(GCS_BUCKET_NAME)
+		-i gnotifs \
+		$(GCS_KNOWN_PUBLISHER_TOKEN) gs://$(GCS_BUCKET_NAME)
 
 
 # DIRVE
-
-build-drive-cli:
-	export GO111MODULE=on
-	go mod tidy
-	cd cmd/client/
-	go build -o bin/drive-cli
-
-run-drive-cli:
-	./bin/drive-cli

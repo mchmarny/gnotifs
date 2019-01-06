@@ -19,7 +19,8 @@ export KNATIVE_DOMAIN="demo.com"
 
 # Token which will be shared between GCP and Knative service
 # to ensure only valid notifications are processed
-export KNOWN_PUBLISHER_TOKEN="$(openssl rand -base64 16 |md5 |head -c16;echo)"
+export GCS_KNOWN_PUBLISHER_TOKEN="$(openssl rand -base64 16 |md5 |head -c16;echo)"
+export DRIVE_KNOWN_PUBLISHER_TOKEN="$(openssl rand -base64 16 |md5 |head -c16;echo)"
 
 ```
 

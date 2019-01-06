@@ -10,7 +10,7 @@ To make things easier, define the following environment variables
 ```shell
 # GCS bucket name
 # Can be existing one of one created just for this demo
-export GCS_BUCKET_NAME="knative-gcs-demo"
+export GCS_BUCKET_NAME="gnotifs-demo"
 ```
 
 ### GCS object change notification
@@ -49,8 +49,8 @@ Activated service account credentials for: [YOUR_SERVICE_ACCOUNT_NAME@sPROJECT_I
 The final step is to create a notification
 
 ```shell
-gsutil notification watchbucket -t $KNOWN_PUBLISHER_TOKEN -i gnotif-gcs \
-    https://gnotif.default.$KNATIVE_DOMAIN/gcs gs://$GCS_BUCKET_NAME
+gsutil notification watchbucket -t $GCS_KNOWN_PUBLISHER_TOKEN -i gnotifs-gcs \
+    https://gnotifs.default.$KNATIVE_DOMAIN/gcs gs://$GCS_BUCKET_NAME
 ```
 
 The response from the above command should look like this
@@ -58,7 +58,7 @@ The response from the above command should look like this
 ```shell
 Watching bucket gs://$GCS_BUCKET_NAME/ with application URL https://gnotif.default.KNATIVE_DOMAIN/gcs ...
 Successfully created watch notification channel.
-Watch channel identifier: gnotif-gcs
+Watch channel identifier: gnotifs-gcs
 Canonicalized resource identifier: 35OA-OShWsXoAIxNN8YxxO_7bzw
 Client state token: 86b361a2c3c1234f
 ```
@@ -74,7 +74,7 @@ The response will look something like this
 ```shell
 ...
 Notification channel 1:
-    Channel identifier: gnotif-gcs
+    Channel identifier: gnotifs-gcs
     Resource identifier: 35OA-OShWsXoAIxNN8YppO_1cft
     ...
 ```
@@ -84,7 +84,7 @@ Notification channel 1:
 To stop notifications run this command
 
 ```shell
-gsutil notification stopchannel gnotif-gcs ["Resource identifier from the list command"]
+gsutil notification stopchannel gnotifs-gcs ["Resource identifier from the list command"]
 ```
 
 ### Demo
