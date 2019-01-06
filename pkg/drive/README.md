@@ -41,7 +41,7 @@ export OAUTH_CLIENT_SECRET=
 The go in browser to generate request code
 
 ```shell
-open https://accounts.google.com/o/oauth2/auth?client_id=${OAUTH_CLIENT_ID}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=https://www.googleapis.com/auth/drive.metadata.readonly&response_type=code
+open "https://accounts.google.com/o/oauth2/auth?client_id=${OAUTH_CLIENT_ID}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=https://www.googleapis.com/auth/drive.metadata.readonly&response_type=code"
 ```
 
 Follow the on-screen prompts and when done, copy the `code`. Again, export it as environment variables.
@@ -88,7 +88,7 @@ To create Drive notification channel now run this command
 ```shell
 curl -X POST -H "Content-Type: application/json" \
     -H "Authorization: Bearer ${OAUTH_AUTH_TOKEN}" \
-    -d '{ "id": "${DRIVE_CHANNEL_ID}", "type": "web_hook", "address": "${SERVICE_ENDPOINT}", "token": "${KNOWN_PUBLISHER_TOKEN}" }' \
+    -d "{ 'id': '${DRIVE_CHANNEL_ID}', 'type': 'web_hook', 'address': '${DRIVE_SERVICE_ENDPOINT}', 'token': '${DRIVE_KNOWN_PUBLISHER_TOKEN}' }" \
     https://www.googleapis.com/drive/v3/files/${NOTIFICATION_DOC_ID}/watch
 ```
 
