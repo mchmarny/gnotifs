@@ -13,19 +13,21 @@ There is one aspect of configuring Google Drive notifications that can't be done
 
 ## Get OAuth Credentials
 
-Assuming you already set up the `PROJECT_ID` variable, you can navigate in the browser to the GCP console using this command:
+> Assuming you have already set up your `PROJECT_ID`, `KNATIVE_DOMAIN`, and `DRIVE_KNOWN_PUBLISHER_TOKEN` variable
+
+To create your OAuth credentials, navigate in the browser to the GCP console using this command:
 
 ```shell
-open https://console.developers.google.com/apis/credentials?project=${PROJECT_ID}&authuser=0
+open "https://console.developers.google.com/apis/credentials?project=${PROJECT_ID}&authuser=0"
 ```
 
 Once there:
 
 * Click `Create Credentails`
- * Select `Create OAuth client ID`
- * Select `Other` for `Application type`
- * Enter `gnotifs` as `Name`
- * Click `Create`
+ - Select `Create OAuth client ID`
+ - Select `Other` for `Application type`
+ - Enter `gnotifs` as `Name`
+ - Click `Create`
 * Click `Download JSON` icon on the far right for the `gnotifs` line item
 
 
