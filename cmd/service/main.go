@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"encoding/json"
 
-	"github.com/mchmarny/kgcs/pkg/gcs"
-	"github.com/mchmarny/kgcs/pkg/utils"
+	"github.com/mchmarny/gnotifs/pkg/gcs"
+	"github.com/mchmarny/gnotifs/pkg/utils"
 )
 
 func main() {

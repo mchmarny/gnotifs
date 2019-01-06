@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/mchmarny/kgcs/pkg/utils"
+	"github.com/mchmarny/gnotifs/pkg/utils"
 )
 
 var (

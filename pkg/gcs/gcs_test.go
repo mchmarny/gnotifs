@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mchmarny/kgcs/pkg/utils"
+	"github.com/mchmarny/gnotifs/pkg/utils"
 )
 
 const (
