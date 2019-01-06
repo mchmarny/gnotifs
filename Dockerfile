@@ -2,14 +2,14 @@
 FROM golang:latest as build
 
 WORKDIR /go/src/github.com/mchmarny/kgcs/
-COPY . /src/
+COPY . .
 
-# build gauther
-WORKDIR /src/
 ENV GO111MODULE=on
 RUN go mod download
-RUN CGO_ENABLED=0 go build -o /kgcs
 
+WORKDIR /go/src/github.com/mchmarny/kgcs/cmd/service/
+
+RUN CGO_ENABLED=0 go build -o /kgcs
 
 
 # run image
