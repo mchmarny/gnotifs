@@ -13,9 +13,14 @@ spec:
             imagePullPolicy: Always
             env:
             - name: RELEASE
-              value: "v0.1.12"
-            - name: KNOWN_PUBLISHER_TOKEN
+              value: "v0.2.1"
+            - name: DRIVE_KNOWN_PUBLISHER_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: gnotif
-                  key: KNOWN_PUBLISHER_TOKEN
+                  key: DRIVE_KNOWN_PUBLISHER_TOKEN
+            - name: GCS_KNOWN_PUBLISHER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gnotif
+                  key: GCS_KNOWN_PUBLISHER_TOKEN

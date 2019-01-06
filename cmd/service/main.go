@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 
 	"github.com/mchmarny/gnotifs/pkg/gcs"
+	"github.com/mchmarny/gnotifs/pkg/drive"
 	"github.com/mchmarny/gnotifs/pkg/utils"
 )
 
@@ -16,7 +17,8 @@ func main() {
 
 	// handlers
 	http.HandleFunc("/", defaultHandler)
-	http.HandleFunc("/gcs", gcs.GCSHandler)
+	http.HandleFunc("/gcs", gcs.NotificationHandler)
+	http.HandleFunc("/drive", drive.NotificationHandler)
 	http.HandleFunc("/_healthz", func(w http.ResponseWriter, _ *http.Request) {
 		fmt.Fprint(w, "ok")
 	})
@@ -34,7 +36,10 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	msg := struct {
 		Handlers []string `json:"handlers"`
 	}{
-		[]string{"POST: /gcs"},
+		[]string{
+			"POST: /gcs",
+			"POST: /drive",
+		},
 	}
 	json.NewEncoder(w).Encode(msg)
 }

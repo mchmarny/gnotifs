@@ -20,7 +20,8 @@ image:
 
 secret:
 	kubectl create secret generic gnotif \
-		--from-literal=KNOWN_PUBLISHER_TOKEN=$(KNOWN_PUBLISHER_TOKEN)
+		--from-literal=DRIVE_KNOWN_PUBLISHER_TOKEN=$(DRIVE_KNOWN_PUBLISHER_TOKEN) \
+		--from-literal=GCS_KNOWN_PUBLISHER_TOKEN=$(GCS_KNOWN_PUBLISHER_TOKEN)
 
 delete-secret:
 	kubectl delete secret gnotif

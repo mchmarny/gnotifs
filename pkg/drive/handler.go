@@ -1,7 +1,6 @@
-package gcs
+package drive
 
 import (
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -11,22 +10,24 @@ import (
 )
 
 var (
-	knownPublisherToken = utils.MustGetEnv("GCS_KNOWN_PUBLISHER_TOKEN", "")
+	knownPublisherToken = utils.MustGetEnv("DRIVE_KNOWN_PUBLISHER_TOKEN", "")
 )
 
 /*
 
 POST
 Content-Type: application/json; charset="utf-8"
-X-Goog-Channel-Id: ChannelId
-X-Goog-Channel-Token: ClientToken
-X-Goog-Resource-Id: ResourceId
-X-Goog-Resource-State: ResourceState
-X-Goog-Resource-Uri: https://www.googleapis.com/storage/v1/b/BucketName/o?alt=json
+X-Goog-Channel-ID: channel-ID-value
+X-Goog-Channel-Token: channel-token-value
+X-Goog-Channel-Expiration: expiration-date-and-time // In human-readable format; present only if channel expires.
+X-Goog-Resource-ID: identifier-for-the-watched-resource
+X-Goog-Resource-URI: version-specific-URI-of-the-watched-resource
+X-Goog-Resource-State: sync
+X-Goog-Message-Number: 1
 */
 
-// NotificationHandler handles GCS notifications
-// https://cloud.google.com/storage/docs/gsutil/commands/notification
+// NotificationHandler handles Google Drive notifications
+// https://developers.google.com/drive/api/v3/push
 func NotificationHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
@@ -43,9 +44,13 @@ func NotificationHandler(w http.ResponseWriter, r *http.Request) {
 	s := utils.GetHeader("X-Goog-Resource-State", r)
 
 	// print only others
+	// print only others
 	utils.GetHeader("X-Goog-Channel-Id", r)
 	utils.GetHeader("X-Goog-Resource-Id", r)
 	utils.GetHeader("X-Goog-Resource-Uri", r)
+	utils.GetHeader("X-Goog-Channel-Expiration", r)
+	utils.GetHeader("X-Goog-Changed", r)
+	utils.GetHeader("X-Goog-Message-Number", r)
 
 	// check for presense/validity of publisher token
 	if t != knownPublisherToken {
@@ -56,37 +61,17 @@ func NotificationHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// if status is sync then there is no body
-	if s == "sync" {
-		log.Println("Sync message")
-		w.WriteHeader(http.StatusNoContent)
-		return
-	}
+	// print document state
+	log.Printf("Document state: %s", s)
 
 	// get payload
 	pb, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
 	if err != nil {
 		log.Printf("Error capturing payload: %v", err)
-
-		http.Error(w, fmt.Sprintf("Error capturing payload: %s", err), http.StatusBadRequest)
-		return
+	} else {
+		// print JSON for debugging
+		log.Printf("BODY: %s", string(pb))
 	}
-
-	// print JSON for debugging
-	// log.Println(string(pb))
-
-	// parse payload
-	n := GCSNotification{}
-	if err := json.Unmarshal(pb, &n); err != nil {
-		log.Printf("Error decoding notification: %v", err)
-		// could be our parsing issue here so BadGateway, GCS will retry
-		http.Error(w, fmt.Sprintf("Error decoding notification: %s", err), http.StatusBadGateway)
-		return
-	}
-
-	// TODO: do something usefull with the pushed message here
-	log.Printf("Payload: %v", n)
 
 	// response with accepted status
 	w.WriteHeader(http.StatusAccepted)

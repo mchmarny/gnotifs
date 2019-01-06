@@ -5,8 +5,6 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
-
-	"github.com/mchmarny/gnotifs/pkg/utils"
 )
 
 const (
@@ -33,18 +31,16 @@ const (
 
 func TestNotificationHandlerWithValidToken(t *testing.T) {
 
-	testToken := utils.MustGetEnv("KGCS_KNOWN_PUBLISHER_TOKEN", "")
-
 	req, _ := http.NewRequest("POST", "/gcs", strings.NewReader(testNotificationContent))
 
-	req.Header.Add("X-Goog-Channel-Token", testToken)
-	req.Header.Add("X-Goog-Channel-Id", "kgcs")
+	req.Header.Add("X-Goog-Channel-Token", knownPublisherToken)
+	req.Header.Add("X-Goog-Channel-Id", "gnotifs")
 	req.Header.Add("X-Goog-Resource-Id", "test")
 	req.Header.Add("X-Goog-Resource-State", "test")
 	req.Header.Add("X-Goog-Resource-Uri", "test")
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(GCSHandler)
+	handler := http.HandlerFunc(NotificationHandler)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusAccepted {
@@ -60,13 +56,13 @@ func TestNotificationHandlerWithInvalidToken(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/gcs", strings.NewReader(testNotificationContent))
 
 	req.Header.Add("X-Goog-Channel-Token", "invalidToken")
-	req.Header.Add("X-Goog-Channel-Id", "kgcs")
+	req.Header.Add("X-Goog-Channel-Id", "gnotifs")
 	req.Header.Add("X-Goog-Resource-Id", "test")
 	req.Header.Add("X-Goog-Resource-State", "test")
 	req.Header.Add("X-Goog-Resource-Uri", "test")
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(GCSHandler)
+	handler := http.HandlerFunc(NotificationHandler)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusBadRequest {
