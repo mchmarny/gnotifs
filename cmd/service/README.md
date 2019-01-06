@@ -12,62 +12,78 @@ To make things easier, define the following environment variables
 
 ```shell
 # GCP project ID
-export PROJECT_ID="Your project ID"
+export PROJECT_ID="Your GCP project ID"
 
 # Knative domain (only the root e.g. demo.com)
-export KNATIVE_DOMAIN="demo.com"
+export KNATIVE_DOMAIN="Knative domain here"
 
-# Token which will be shared between GCP and Knative service
+# Create tokens which will be shared between GCP and Knative service
 # to ensure only valid notifications are processed
-export GCS_KNOWN_PUBLISHER_TOKEN="$(openssl rand -base64 16 |md5 |head -c16;echo)"
-export DRIVE_KNOWN_PUBLISHER_TOKEN="$(openssl rand -base64 16 |md5 |head -c16;echo)"
-
+export GCS_KNOWN_PUBLISHER_TOKEN="$(openssl rand -base64 16 | md5)"
+export DRIVE_KNOWN_PUBLISHER_TOKEN="$(openssl rand -base64 16 | md5)"
 ```
-
 
 #### Build image
 
-From the root of this project run
+To build `gnotifs` image using GCP Cloud Build run this command from the root of the project
 
 ```shell
-gcloud builds submit \
-    --project=$(PROJECT_ID) \
+gcloud builds submit --project=$(PROJECT_ID) \
     --tag gcr.io/$(PROJECT_ID)/gnotif:latest .
 ```
 
-The build service is pretty verbose in output, eventually though you should see something like this
+The Cloud Build service is pretty verbose, eventually though you should see something like this
 
 ```shell
 ID           CREATE_TIME          DURATION  SOURCE                                   IMAGES                      STATUS
-6905dd3a...  2019-01-23T03:48...  1M43S     gs://PROJECT_cloudbuild/source/15...tgz  gcr.io/PROJECT/gnotif SUCCESS
+6905dd3a...  2019-01-23T03:48...  1M43S     gs://PROJECT_cloudbuild/source/15...tgz  gcr.io/PROJECT/gnotifs      SUCCESS
 ```
 
-Copy the image URI from `IMAGE` column (e.g. `gcr.io/PROJECT_ID/gnotif`).
+Copy the image URI from `IMAGE` column (e.g. `gcr.io/PROJECT_ID/gnotifs`).
 
 #### Create secret
 
 ```shell
-kubectl create secret generic gnotif \
-	--from-literal=KNOWN_PUBLISHER_TOKEN=$(KNOWN_PUBLISHER_TOKEN)
+kubectl create secret generic gnotifs \
+	--from-literal=DRIVE_KNOWN_PUBLISHER_TOKEN=$(DRIVE_KNOWN_PUBLISHER_TOKEN) \
+	--from-literal=GCS_KNOWN_PUBLISHER_TOKEN=$(GCS_KNOWN_PUBLISHER_TOKEN) \
 ```
 
 The response should be
 
 ```shell
-secret "gnotif" created
+secret "gnotifs" created
 ```
 
 #### Deploy service
 
-Before we can deploy that service to Knative you will need to update the `service.yaml` file to the image URL you captured from the `Build image` step.
+Before we can deploy that service to Knative you will need to update the `deployments/gnotifs.yaml` file with the URL of the image we just built.
 
 ```yaml
 spec:
     container:
-        image: gcr.io/PROJECT_ID/gnotif:latest
+        image: gcr.io/PROJECT_ID/gnotifs:latest
 ```
 
-To test your deployment you should be able to invoke the root of the `gnotif` and see
+Once updated, you are ready to publish the `gnotifs` service to Knative cluster
+
+```shell
+kubectl apply -f deployments/gnotifs.yaml
+```
+
+There response from this command should look someting like this
+
+```shell
+service.serving.knative.dev "gnotifs" created
+```
+
+You can now test your deployment by invoking its root URL
+
+```shell
+open "https://gnotifs.default.${KNATIVE_DOMAIN}"
+```
+
+The response should will include the type of notification handlers currently enabled on your Knative service
 
 ```json
 {
@@ -78,17 +94,7 @@ To test your deployment you should be able to invoke the root of the `gnotif` an
 }
 ```
 
-That means the Knative service found the necessary secret and it ready to process notifications from GCS
-
-Go ahead and configure at least one of the notification sources listed [here](https://github.com/mchmarny/gnotifs)
-
-### Demo
-
-The `gnotif` service doesn't do much with the submitted notifications. It does log them so we can tail on the Kubernetes logs to demo
-
-```shell
-kubectl -l 'serving.knative.dev/service=gnotif' logs -c user-container
-```
+The `gnotifs` service is now configured on Knative. Go ahead and configure at least one of the [notification sources listed here](https://github.com/mchmarny/gnotifs#gcp-notifications).
 
 
 ## Disclaimer

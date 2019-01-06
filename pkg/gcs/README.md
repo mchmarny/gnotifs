@@ -1,37 +1,35 @@
-# GCS
+# GCS Notifications
 
-To configure this demo will will need to configure two things:
+To have GCS push notifications to `gnotifs` on Knative you will need to configure two things:
 
 * [Knative service](../../cmd/service)
-* GCS object change notification (below)
+* GCS object change notification (this document)
 
-To make things easier, define the following environment variables
+> Assuming you have already set up your `PROJECT_ID`, `KNATIVE_DOMAIN`, and `GCS_KNOWN_PUBLISHER_TOKEN` variable
+
+To start with, define the following environment variables
 
 ```shell
-# GCS bucket name
-# Can be existing one of one created just for this demo
-export GCS_BUCKET_NAME="gnotifs-demo"
+# GCS bucket name - can be existing one of one created just for this demo
+export GCS_BUCKET_NAME="NAME_OF_YOUR_GCS_BUCKET"
 ```
 
 ### GCS object change notification
 
-There is one aspect of configuring GCS notifications that can't be done from through API, it is the act of adding the domain configured on Knative cluster to the allow domain list in GCP project. The complete list of steps is outlined [here](https://cloud.google.com/storage/docs/object-change-notification#_Authorize_Endpoint) but it boils down to following steps.
-
-> Note, if your domain is NOT managed by Google you will also have to [verify the domain ownership](https://cloud.google.com/endpoints/docs/openapi/verify-domain-name)
+There is one aspect of configuring GCS notifications that can't be done from through API. It is the act of adding the Knative domain to the allowed domain list in GCP project. The complete list of steps is outlined [here](https://cloud.google.com/storage/docs/object-change-notification#_Authorize_Endpoint), but the basic steps are: 
 
 #### Endpoint Authorization
 
-1. Go to [domain verification tab](https://console.cloud.google.com/apis/credentials/domainverification?_ga=2.186591593.-1146811178.1546727070) on the Credentials page in GCP Console
-2. Make sure you are in the same GCP project as the GCS bucket from which you want to receive notifications
+1. Navigate to [domain verification tab](https://console.cloud.google.com/apis/credentials/domainverification) on the Credentials page in GCP Console (make sure you are in the same GCP project as the GCS bucket from which you want to receive notifications)
 3. Click Add domain
-4. Enter the service domain (`gnotif.default.${KNATIVE_DOMAIN}`)
+4. Enter the service domain (`echo "gnotif.default.${KNATIVE_DOMAIN}"`)
 5. And click the Add domain button to confirm
 
 If you experience any issues there are few troubleshooting tips [here](https://cloud.google.com/storage/docs/object-change-notification#_Authorize_Endpoint)
 
 #### Service Account
 
-If you don't have a service account already or want to create one specific for the GCS notifications follow the instructions [here](https://cloud.google.com/storage/docs/object-change-notification#_Service_Account). Once you have the service account key, authenticate gcloud with that service account
+If you don't have a service account already, or if want to create one specific for the GCS notifications, follow the instructions [here](https://cloud.google.com/storage/docs/object-change-notification#_Service_Account). Once you have the service account key, authenticate `gcloud` with that service account
 
 ```shell
 gcloud auth activate-service-account \
@@ -89,7 +87,11 @@ gsutil notification stopchannel gnotifs-gcs ["Resource identifier from the list 
 
 ### Demo
 
-Upload file to the `$GCS_BUCKET_NAME` in either browser or using `gsutil` see the Knative log output the notification data
+Upload file to your bucket in either browser or using `gsutil` and [see the Knative log output](https://github.com/mchmarny/gnotifs/#demo) the notification data
+
+```shell
+gsutil cp test-file.txt gs://$GCS_BUCKET_NAME
+```
 
 ## Disclaimer
 
