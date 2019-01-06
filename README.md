@@ -1,21 +1,19 @@
 # gnotifs
 
-GCP notifications processing using Knative service demo
+> GCP notifications processing using Knative service
 
-GCP exposes many types of evens as notifications. You can easy wire it to PubSub of even your own code on GCF. If you want to wire these notifications to external endpoint like service deployed on Knative there are few additional steps. This demo will walk through the entire process.
+GCP exposes many types of events as notifications. You can easy wire these notifications to PubSub of even directly to GCF. However, if you want to send these notifications to external endpoint, like service deployed on Knative, there are few additional steps you will need to take. This demo will walk through the entire process.
 
 ## Knative Service
 
-The instructions on building and deploying the `gnotifs` service onto Knative are located [here](cmd/service).
+The instructions on building and deploying `gnotifs` service on Knative are located [here](cmd/service).
 
+## GCP Notifications
 
-## Notifications
-
-Once the notification target service is configured on Knative, you will have to configure the event sources (triggers) individually. The currently supported notifications are:
+Once the GCP notification processing service `gnotifs` is configured on Knative, you will have to set up event individual event sources (triggers). The currently supported GCP notification sources are:
 
 * [Google Cloud Storage (GCS)](pkg/gcs)
 * [Google Drive (Drive)](pkg/drive)
-
 
 ## Disclaimer
 
