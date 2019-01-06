@@ -3,7 +3,7 @@
 To configure this demo will will need to configure two things:
 
 * [Knative service](../../cmd/service)
-* [GCS object change notification]()
+* GCS object change notification (below)
 
 To make things easier, define the following environment variables
 
@@ -49,16 +49,16 @@ Activated service account credentials for: [YOUR_SERVICE_ACCOUNT_NAME@sPROJECT_I
 The final step is to create a notification
 
 ```shell
-gsutil notification watchbucket -t $KGCS_KNOWN_PUBLISHER_TOKEN -i kgcs \
-    https://kgcs.default.$KNATIVE_DOMAIN/gcs gs://$KGCS_BUCKET_NAME
+gsutil notification watchbucket -t $KNOWN_PUBLISHER_TOKEN -i gnotif-gcs \
+    https://gnotif.default.$KNATIVE_DOMAIN/gcs gs://$GCS_BUCKET_NAME
 ```
 
 The response from the above command should look like this
 
 ```shell
-Watching bucket gs://$KGCS_BUCKET_NAME/ with application URL https://kgcs.default.KNATIVE_DOMAIN/gcs ...
+Watching bucket gs://$GCS_BUCKET_NAME/ with application URL https://gnotif.default.KNATIVE_DOMAIN/gcs ...
 Successfully created watch notification channel.
-Watch channel identifier: kgcs
+Watch channel identifier: gnotif-gcs
 Canonicalized resource identifier: 35OA-OShWsXoAIxNN8YxxO_7bzw
 Client state token: 86b361a2c3c1234f
 ```
@@ -66,7 +66,7 @@ Client state token: 86b361a2c3c1234f
 To verify that the notification was configured correctly you can use the list command
 
 ```shell
-gsutil notification list -o gs://$KGCS_BUCKET_NAME
+gsutil notification list -o gs://$GCS_BUCKET_NAME
 ```
 
 The response will look something like this
@@ -74,7 +74,7 @@ The response will look something like this
 ```shell
 ...
 Notification channel 1:
-    Channel identifier: kgcs
+    Channel identifier: gnotif-gcs
     Resource identifier: 35OA-OShWsXoAIxNN8YppO_1cft
     ...
 ```
@@ -84,19 +84,12 @@ Notification channel 1:
 To stop notifications run this command
 
 ```shell
-gsutil notification stopchannel kgcs ["Resource identifier from the list command"]
+gsutil notification stopchannel gnotif-gcs ["Resource identifier from the list command"]
 ```
 
 ### Demo
 
-The `kgcs` app doesn't do much with the submitted GCS notifications other than log them. To demo this app you can query the Kubernetes logs.
-
-```shell
-kubectl -l 'serving.knative.dev/service=kgcs' logs -c user-container
-```
-
 Upload file to the `$GCS_BUCKET_NAME` in either browser or using `gsutil` see the Knative log output the notification data
-
 
 ## Disclaimer
 

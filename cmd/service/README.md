@@ -79,7 +79,7 @@ To test your deployment you should be able to invoke the root of the `gnotif` an
 
 That means the Knative service found the necessary secret and it ready to process notifications from GCS
 
-Go ahead and configure at least one of the notification sources listed [here](../../)
+Go ahead and configure at least one of the notification sources listed [here](https://github.com/mchmarny/gnotifs)
 
 ### Demo
 
