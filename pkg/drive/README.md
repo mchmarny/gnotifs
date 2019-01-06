@@ -1,21 +1,19 @@
-# Drive
+# Drive Notifications 
 
-Google Drive supports notifications for one document or all. In this example will set up notification for one Google Doc document and process them in Knative. To configure this demo will will need to setup two things:
+Google Drive supports notifications for one document or all files in your drive. In this example will set up notification for one Google Doc document and process them in Knative. To configure this demo will will need to setup two things:
 
 * [Knative service](../../cmd/service)
-* Google Drive document change notification (below)
+* Google Drive document change notification (this document)
 
 ## Google Drive document change notification
 
 There is one aspect of configuring Google Drive notifications that can't be done from through API, it is the act of adding the domain configured on Knative cluster to the allow domain list in GCP project. The complete list of steps is outlined [here](https://cloud.google.com/storage/docs/object-change-notification#_Authorize_Endpoint)
 
-> Note, if your domain is NOT managed by Google you will also have to [verify the domain ownership](https://cloud.google.com/endpoints/docs/openapi/verify-domain-name)
-
 ## Get OAuth Credentials
 
 > Assuming you have already set up your `PROJECT_ID`, `KNATIVE_DOMAIN`, and `DRIVE_KNOWN_PUBLISHER_TOKEN` variable
 
-To create your OAuth credentials, navigate in the browser to the GCP console using this command:
+To create your OAuth credentials, run the below command to navigate in browser to the GCP console using this command:
 
 ```shell
 open "https://console.developers.google.com/apis/credentials?project=${PROJECT_ID}&authuser=0"
