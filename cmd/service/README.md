@@ -94,7 +94,7 @@ The response should will include the type of notification handlers currently ena
 }
 ```
 
-The `gnotifs` service is now configured on Knative. Go ahead and configure at least one of the notification sources listed [here](https://github.com/mchmarny/gnotifs#notification-sources)
+The `gnotifs` service is now configured on Knative. Go ahead and configure at least one of the [notification sources listed here](https://github.com/mchmarny/gnotifs#gcp-notifications).
 
 
 ## Disclaimer
