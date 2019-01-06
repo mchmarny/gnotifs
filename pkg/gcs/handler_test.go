@@ -44,7 +44,7 @@ func TestNotificationHandlerWithValidToken(t *testing.T) {
 	req.Header.Add("X-Goog-Resource-Uri", "test")
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(NotificationHandler)
+	handler := http.HandlerFunc(GCSHandler)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusAccepted {
@@ -66,7 +66,7 @@ func TestNotificationHandlerWithInvalidToken(t *testing.T) {
 	req.Header.Add("X-Goog-Resource-Uri", "test")
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(NotificationHandler)
+	handler := http.HandlerFunc(GCSHandler)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusBadRequest {

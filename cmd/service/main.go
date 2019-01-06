@@ -16,7 +16,7 @@ func main() {
 
 	// handlers
 	http.HandleFunc("/", defaultHandler)
-	http.HandleFunc("/gcs", gcs.NotificationHandler)
+	http.HandleFunc("/gcs", gcs.GCSHandler)
 	http.HandleFunc("/_healthz", func(w http.ResponseWriter, _ *http.Request) {
 		fmt.Fprint(w, "ok")
 	})

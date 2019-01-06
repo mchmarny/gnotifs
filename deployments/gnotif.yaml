@@ -1,23 +1,21 @@
 apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
-  name: kgcs
+  name: gnotif
   namespace: default
-  labels:
-    app: kgcs
 spec:
   runLatest:
     configuration:
       revisionTemplate:
         spec:
           container:
-            image: gcr.io/s9-demo/kgcs:latest
+            image: gcr.io/s9-demo/gnotif:latest
             imagePullPolicy: Always
             env:
             - name: RELEASE
               value: "v0.1.12"
-            - name: KGCS_KNOWN_PUBLISHER_TOKEN
+            - name: KNOWN_PUBLISHER_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: kgcs
-                  key: KGCS_KNOWN_PUBLISHER_TOKEN
+                  name: gnotif
+                  key: KNOWN_PUBLISHER_TOKEN

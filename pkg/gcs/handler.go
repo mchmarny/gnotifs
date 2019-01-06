@@ -25,9 +25,9 @@ X-Goog-Resource-State: ResourceState
 X-Goog-Resource-Uri: https://www.googleapis.com/storage/v1/b/BucketName/o?alt=json
 */
 
-// NotificationHandler handles GCS submissions
+// GCSHandler handles GCS notifications
 // https://cloud.google.com/storage/docs/gsutil/commands/notification
-func NotificationHandler(w http.ResponseWriter, r *http.Request) {
+func GCSHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
@@ -77,7 +77,7 @@ func NotificationHandler(w http.ResponseWriter, r *http.Request) {
 	// log.Println(string(pb))
 
 	// parse payload
-	n := ObjectNotification{}
+	n := GCSNotification{}
 	if err := json.Unmarshal(pb, &n); err != nil {
 		log.Printf("Error decoding notification: %v", err)
 		// could be our parsing issue here so BadGateway, GCS will retry

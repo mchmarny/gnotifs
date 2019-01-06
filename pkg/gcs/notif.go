@@ -25,9 +25,9 @@ Sample Payload
 
 */
 
-// ObjectNotification represents the GCS pushed payload
+// GCSNotification represents the GCS pushed payload
 // Capturing only the bits that we need here
-type ObjectNotification struct {
+type GCSNotification struct {
 
 	// notification
 	Kind       string `json:"kind"`
