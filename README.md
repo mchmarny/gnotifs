@@ -14,6 +14,7 @@ Once the GCP notification processing service `gnotifs` is configured on Knative,
 
 * [Google Cloud Storage (GCS)](pkg/gcs/README.md)
 * [Google Drive (Drive)](pkg/drive/README.md)
+* Google Assistant (Dialogflow)
 * Google Calendar
 * Stackdriver 
 
