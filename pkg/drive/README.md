@@ -1,4 +1,4 @@
-# Drive Notifications 
+# Drive Notifications
 
 Google Drive supports notifications for one document or all files in your drive. In this example will set up notification for one Google Doc document and process them in Knative. To configure this demo will will need to setup two things:
 
@@ -92,6 +92,9 @@ curl -X POST -H "Content-Type: application/json" \
 ```
 
 Capture the `resourceId` if you ever need to stop that channel
+
+> Note, by default, Drive API will be sending these notifications only for 1 hr. If you want to extend it, include an `expiration` property string set to a Unix timestamp (in ms) in the above message. The maximum time for Drive notifications is 1 day (86400 seconds)!
+
 
 ## Stop Drive Channel Notification Channel
 
