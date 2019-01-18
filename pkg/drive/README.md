@@ -33,39 +33,39 @@ Once there:
 From the downloaded credentials JSON copy `client_id` and `client_secret`. To make things easier, export these as environment variables like below.
 
 ```shell
-export OAUTH_CLIENT_ID=
-export OAUTH_CLIENT_SECRET=
+export NOTIF_OAUTH_CLIENT_ID=""
+export NOTIF_OAUTH_CLIENT_SECRET=""
 ```
 
 The go in browser to generate request code
 
 ```shell
-open "https://accounts.google.com/o/oauth2/auth?client_id=${OAUTH_CLIENT_ID}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=https://www.googleapis.com/auth/drive.metadata.readonly&response_type=code"
+open "https://accounts.google.com/o/oauth2/auth?client_id=${NOTIF_OAUTH_CLIENT_ID}&redirect_uri=urn:ietf:wg:oauth:2.0:oob&scope=https://www.googleapis.com/auth/drive.metadata.readonly&response_type=code"
 ```
 
 Follow the on-screen prompts and when done, copy the `code`. Again, export it as environment variables.
 
 ```shell
-export OAUTH_AUTH_CODE=
+export NOTIF_OAUTH_AUTH_CODE=
 ```
 
 Now it's time to get the OAuth token
 
 ```shell
-curl -d client_id=$OAUTH_CLIENT_ID \
-     -d client_secret=$OAUTH_CLIENT_SECRET \
+curl -d client_id=$NOTIF_OAUTH_CLIENT_ID \
+     -d client_secret=$NOTIF_OAUTH_CLIENT_SECRET \
      -d grant_type=authorization_code \
      -d redirect_uri=urn:ietf:wg:oauth:2.0:oob \
-     -d code=$OAUTH_AUTH_CODE \
+     -d code=$NOTIF_OAUTH_AUTH_CODE \
      https://accounts.google.com/o/oauth2/token
 ```
 
 Copy the `access_token` from the response and export it as environment variables. We are also are goign to generate UUID to help as track Google Drive notification channel.
 
 ```shell
-export OAUTH_AUTH_TOKEN=
+export NOTIF_OAUTH_AUTH_TOKEN=
 export DRIVE_CHANNEL_ID=$(uuidgen)
-export DRIVE_SERVICE_ENDPOINT="https://gnotifs.default.${KNATIVE_DOMAIN}/drive"
+export DRIVE_SERVICE_ENDPOINT="https://notif.demo.${KNATIVE_DOMAIN}/drive"
 ```
 
 ## Drive Notification Channel
@@ -86,7 +86,7 @@ To create Drive notification channel now run this command
 
 ```shell
 curl -X POST -H "Content-Type: application/json" \
-    -H "Authorization: Bearer ${OAUTH_AUTH_TOKEN}" \
+    -H "Authorization: Bearer ${NOTIF_OAUTH_AUTH_TOKEN}" \
     -d "{ 'id': '${DRIVE_CHANNEL_ID}', 'type': 'web_hook', 'address': '${DRIVE_SERVICE_ENDPOINT}', 'token': '${DRIVE_KNOWN_PUBLISHER_TOKEN}' }" \
     https://www.googleapis.com/drive/v3/files/${NOTIFICATION_DOC_ID}/watch
 ```
@@ -103,7 +103,7 @@ The channels expire themselves and you will have to recreate it bit if you want 
 
 ```shell
 curl -X POST -H "Content-Type: application/json" \
-    -H "Authorization: Bearer ${OAUTH_AUTH_TOKEN}" \
+    -H "Authorization: Bearer ${NOTIF_OAUTH_AUTH_TOKEN}" \
     -d '{ "id": "${DRIVE_CHANNEL_ID}", "resourceId": "YOUR_CHANNEL_RESOURCE_ID" }' \
     https://www.googleapis.com/drive/v3/channels/stop
 ```

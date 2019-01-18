@@ -44,9 +44,9 @@ Copy the image URI from `IMAGE` column (e.g. `gcr.io/PROJECT_ID/gnotifs`).
 #### Create secret
 
 ```shell
-kubectl create secret generic gnotifs \
-	--from-literal=DRIVE_KNOWN_PUBLISHER_TOKEN=$(DRIVE_KNOWN_PUBLISHER_TOKEN) \
-	--from-literal=GCS_KNOWN_PUBLISHER_TOKEN=$(GCS_KNOWN_PUBLISHER_TOKEN) \
+kubectl create secret generic gnotifs -n demo \
+	--from-literal=DRIVE_KNOWN_PUBLISHER_TOKEN=$DRIVE_KNOWN_PUBLISHER_TOKEN \
+	--from-literal=GCS_KNOWN_PUBLISHER_TOKEN=$GCS_KNOWN_PUBLISHER_TOKEN
 ```
 
 The response should be

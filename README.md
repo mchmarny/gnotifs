@@ -16,21 +16,22 @@ Once the GCP notification processing service `gnotifs` is configured on Knative,
 * [Google Drive (Drive)](pkg/drive/README.md)
 * Google Assistant (Dialogflow)
 * Google Calendar
-* Stackdriver 
+* Stackdriver
 
 ### Demo
 
 The `gnotif` service doesn't do much with the submitted notifications besids output them to log. To demo the incoming notifications you can print these notification logs like this
 
 ```shell
-kubectl -l 'serving.knative.dev/service=gnotif' logs -c user-container
+kubectl logs -n demo -c user-container -l 'demo=notif'
 ```
 
-Alternativly, you can stream the logs using [kail](https://github.com/boz/kail). 
+Alternativly, you can stream the logs using [kail](https://github.com/boz/kail).
 
 ```shell
 # Get the pod name from 'kubectl get pods'
-kail -p POD_NAME -c user-container 
+kail -l 'serving.knative.dev/service=notif' -c user-container
+kail -l 'demo=notif' -c user-container
 ```
 
 ## Disclaimer

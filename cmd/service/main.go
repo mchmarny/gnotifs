@@ -26,7 +26,7 @@ func main() {
 	// variables
 	port := utils.MustGetEnv("PORT", "8080")
 
-	log.Printf("Server started on port %s \n", port)
+	log.Printf("Server started on port %s", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }
 

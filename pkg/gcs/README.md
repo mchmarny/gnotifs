@@ -11,35 +11,33 @@ To start with, define the following environment variables
 
 ```shell
 # GCS bucket name - can be existing one of one created just for this demo
-export GCS_BUCKET_NAME="NAME_OF_YOUR_GCS_BUCKET"
+export GCS_BUCKET_NAME="knative-gcs-sample"
 ```
 
 ### GCS object change notification
 
-There is one aspect of configuring GCS notifications that can't be done from through API. It is the act of adding the Knative domain to the allowed domain list in GCP project. The complete list of steps is outlined [here](https://cloud.google.com/storage/docs/object-change-notification#_Authorize_Endpoint), but the basic steps are: 
+There is one aspect of configuring GCS notifications that can't be done from through API. It is the act of adding the Knative domain to the allowed domain list in GCP project. The complete list of steps is outlined [here](https://cloud.google.com/storage/docs/object-change-notification#_Authorize_Endpoint), but the basic steps are:
 
 #### Endpoint Authorization
 
 1. Navigate to [domain verification tab](https://console.cloud.google.com/apis/credentials/domainverification) on the Credentials page in GCP Console (make sure you are in the same GCP project as the GCS bucket from which you want to receive notifications)
 3. Click Add domain
-4. Enter the service domain (`echo "gnotif.default.${KNATIVE_DOMAIN}"`)
+4. Enter the service domain (`echo "notif.demo.${KNATIVE_DOMAIN}"`)
 5. And click the Add domain button to confirm
 
 If you experience any issues there are few troubleshooting tips [here](https://cloud.google.com/storage/docs/object-change-notification#_Authorize_Endpoint)
 
 #### Service Account
 
-If you don't have a service account already, or if want to create one specific for the GCS notifications, follow the instructions [here](https://cloud.google.com/storage/docs/object-change-notification#_Service_Account). Once you have the service account key, authenticate `gcloud` with that service account
+If you don't have a service account already, or if want to create one specific for the GCS notifications, follow the instructions [here](https://cloud.google.com/storage/docs/object-change-notification#_Service_Account). Once you have the service account key, authenticate `gcloud` with that service account.
 
 ```shell
-gcloud auth activate-service-account \
-    YOUR_SERVICE_ACCOUNT_NAME@sPROJECT_ID.iam.gserviceaccount.com \
-    --key-file PATH_TO_YOUR_SERVICE_ACCOUNT_KEY.json
+gcloud auth activate-service-account $DEMO_SA_EMAIL --key-file $DEMO_SA_KEY_PATH
 ```
 The response from the above command should look like this
 
 ```shell
-Activated service account credentials for: [YOUR_SERVICE_ACCOUNT_NAME@sPROJECT_ID.iam.gserviceaccount.com]
+Activated service account credentials for: [YOUR_SA_USERNAME@YOUR_PROJECT.iam.gserviceaccount.com]
 ```
 
 #### Create notification
@@ -48,13 +46,13 @@ The final step is to create a notification
 
 ```shell
 gsutil notification watchbucket -t $GCS_KNOWN_PUBLISHER_TOKEN -i gnotifs-gcs \
-    https://gnotifs.default.$KNATIVE_DOMAIN/gcs gs://$GCS_BUCKET_NAME
+    "https://notif.demo.${KNATIVE_DOMAIN}/gcs" "gs://${GCS_BUCKET_NAME}"
 ```
 
 The response from the above command should look like this
 
 ```shell
-Watching bucket gs://$GCS_BUCKET_NAME/ with application URL https://gnotif.default.KNATIVE_DOMAIN/gcs ...
+Watching bucket gs://$GCS_BUCKET_NAME/ with application URL https://notif.demo.KNATIVE_DOMAIN/gcs ...
 Successfully created watch notification channel.
 Watch channel identifier: gnotifs-gcs
 Canonicalized resource identifier: 35OA-OShWsXoAIxNN8YxxO_7bzw
@@ -90,7 +88,9 @@ gsutil notification stopchannel gnotifs-gcs ["Resource identifier from the list 
 Upload file to your bucket in either browser or using `gsutil` and [see the Knative log output](https://github.com/mchmarny/gnotifs/#demo) the notification data
 
 ```shell
-gsutil cp test-file.txt gs://$GCS_BUCKET_NAME
+echo "Knative test" > ./test.txt
+gsutil cp ./test.txt gs://$GCS_BUCKET_NAME
+rm ./test.txt
 ```
 
 ## Disclaimer

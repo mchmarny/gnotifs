@@ -1,19 +1,29 @@
 apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
-  name: gnotifs
-  namespace: default
+  name: notif
+  namespace: demo
 spec:
   runLatest:
     configuration:
       revisionTemplate:
+        metadata:
+          labels:
+            demo: notif
         spec:
           container:
             image: gcr.io/s9-demo/gnotifs:latest
             imagePullPolicy: Always
+            resources:
+              requests:
+                memory: "256Mi"
+                cpu: "0.5"
+              limits:
+                memory: "1Gi"
+                cpu: "1"
             env:
             - name: RELEASE
-              value: "v0.2.1"
+              value: "v0.2.3"
             - name: DRIVE_KNOWN_PUBLISHER_TOKEN
               valueFrom:
                 secretKeyRef:
