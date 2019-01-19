@@ -16,14 +16,14 @@ spec:
             imagePullPolicy: Always
             resources:
               requests:
-                memory: "256Mi"
+                memory: "128Mi"
                 cpu: "0.5"
               limits:
-                memory: "1Gi"
+                memory: "256Mi"
                 cpu: "1"
             env:
             - name: RELEASE
-              value: "v0.2.3"
+              value: "v0.2.4"
             - name: DRIVE_KNOWN_PUBLISHER_TOKEN
               valueFrom:
                 secretKeyRef:

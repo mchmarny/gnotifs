@@ -20,17 +20,15 @@ Once the GCP notification processing service `gnotifs` is configured on Knative,
 
 ### Demo
 
-The `gnotif` service doesn't do much with the submitted notifications besids output them to log. To demo the incoming notifications you can print these notification logs like this
+The `gnotif` service doesn't do much with the submitted notifications besides output them to log. To demo the incoming notifications you can print these notification logs like this
 
 ```shell
 kubectl logs -n demo -c user-container -l 'demo=notif'
 ```
 
-Alternativly, you can stream the logs using [kail](https://github.com/boz/kail).
+Alternatively, you can stream the logs using [kail](https://github.com/boz/kail).
 
 ```shell
-# Get the pod name from 'kubectl get pods'
-kail -l 'serving.knative.dev/service=notif' -c user-container
 kail -l 'demo=notif' -c user-container
 ```
 

@@ -85,12 +85,17 @@ gsutil notification stopchannel gnotifs-gcs ["Resource identifier from the list 
 
 ### Demo
 
-Upload file to your bucket in either browser or using `gsutil` and [see the Knative log output](https://github.com/mchmarny/gnotifs/#demo) the notification data
+Setup a log watch
 
 ```shell
-echo "Knative test" > ./test.txt
+kail -l demo=notif -n demo -c user-container
+```
+
+Now upload file to your bucket in either browser or using `gsutil`
+
+```shell
+echo "My Knative test" > ./test.txt
 gsutil cp ./test.txt gs://$GCS_BUCKET_NAME
-rm ./test.txt
 ```
 
 ## Disclaimer
